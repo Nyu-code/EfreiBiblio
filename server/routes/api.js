@@ -4,7 +4,8 @@ const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 
-const sequelize = new Sequelize("bd_web_projet", "root", "projet",{
+//MDP A CHANGER
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "MDP",{
   dialect:'mysql',
   host:'localhost'
 })
