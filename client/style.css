@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Shippori Antique', serif;
+    font-size: 16px;
+}
+li,a, button{
+    font-weight: 500;
+    text-decoration: none;
+    color: black;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+}
+
+.logoEfreiBiblio {
+    width: 20%;
+    cursor: pointer;
+}
+
+.navlink {
+    list-style: none;
+}
+.navlink li {
+    display: inline-block;
+    padding: 0px 30px;
+}
+
+.navlink li a {
+    font-size: 25px;
+    transition: all 0.3s ease 0s;
+}
+
+.navlink li a:hover{
+    color: deepskyblue;
+}
+
+button {
+    font-size: 25px;
+    padding: 9px 25px;
+    background-color:rgb(25, 25, 180);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: white;
+}
+
+button:hover{
+    background-color:dodgerblue;
+}
+
+footer {
+    margin-top: 5rem;
+    border-top: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+footer div {
+    font-size: small;
+    text-align: center;
+}
+
+.copyrightText {
+    margin-top: 1em;
+}
