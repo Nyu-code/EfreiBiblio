@@ -2,33 +2,49 @@
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>EfreiBiblio</title>
+        <link rel="stylesheet" href="style.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        
+        <link rel="shortcut icon" href="images/JPG/Livre.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Shippori+Antique&display=swap" rel="stylesheet">
     </head>
     <body>
         <div id="app">
           <header>
-            <nav>
-                <router-link to='/authentification'>Authentification</router-link>
-                <router-link to='/catalogue'>Catalogue</router-link>
-                <router-link to='/panier'>Panier</router-link>
+              <img class="logoEfreiBiblio" src="images/JPG/EfreiBiblioLogo2.png" alt="Logo de la page">
+              <nav>
+                  <ul class="navlink">
+                    <li><router-link to='/Accueil'>Accueil</router-link></li>
+                    <li><router-link to='/Catalogue'>Catalogue</router-link></li>
+                    <li><router-link to='/Panier'>Panier</router-link></li>
+                  </ul>
               </nav>
+              <router-link to="/Authentification"><button>Login</button></router-link>
           </header>
           <main>
-            <router-view
+              <router-view
+              :catalogue="catalogue"
+              :panier="panier"
               :livres="livres"
               @add-livre="addLivre"
               @delete-livre="deleteLivre"
-            ></router-view>
+              ></router-view>
           </main>
           <footer>
             
           </footer>
         </div>
         <script src="/vue-application.js"></script>
+        <footer>
+            <div class="copyrightText">Copyright © 2022 | EfreiBiblio Corporation. Tous droits réservés</div>
+            <div class="divAboutUs">
+                <a class="linkAboutUs" href="apropos.html">À Propos de nous</a>
+            </div>
+        </footer>
     </body>
 </html>
