@@ -12,9 +12,18 @@
     <body>
         <div id="app">
           <header>
+            <nav>
+                <router-link to='/authentification'>Authentification</router-link>
+                <router-link to='/catalogue'>Catalogue</router-link>
+                <router-link to='/panier'>Panier</router-link>
+              </nav>
           </header>
           <main>
-            
+            <router-view
+              :livres="livres"
+              @add-livre="addLivre"
+              @delete-livre="deleteLivre"
+            ></router-view>
           </main>
           <footer>
             
