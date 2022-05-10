@@ -10,7 +10,7 @@
         </tr>
         <tr v-for="livre in panier" :key="livre.idlivre">
             <td><img :src="livre.image" class="livre_image"></td>
-            <td>{{livre.title}}</td>
+            <td><b>{{livre.title}}</b></td>
             <td>{{livre.author}}</td>
             <td>{{livre.edition}}</td>
             <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="supprimeritem()"/></td>
