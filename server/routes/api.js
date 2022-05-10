@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 //MDP A CHANGER
-const sequelize = new Sequelize("bd_web_efreibiblio", "root", "hugo",{
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "1069071822",{
   dialect:'mysql',
   host:'localhost'
 })
@@ -15,7 +15,6 @@ try{
 }catch(error){
   console.error("Impossible de se connecter, erreur suivante : ", error);
 }
-
 
 router.get('/livres', (req, res) => {
   sequelize.query("SELECT idlivre, title, author, edition, quantity, image FROM livre")
@@ -66,6 +65,20 @@ router.post('/livres', (req, res) => {
   })
 
 }
+
+router.get('/panier', (req, res) => {
+  sequelize.query("SELECT * FROM livre WHERE idlivre in (SELECT id_livre FROM panier_item WHERE id_panier = (SELECT idpanier FROM panier WHERE id_user = 1))")
+  .then(([results, metadata]) => {
+    res.json(results)
+  })
+})
+
+router.post('/panier', (req, res) => {
+  const idlivre = req.body.idlivre
+  const quantity = 1
+  const id_panier = 1  //req.session.panier.idpanier
+  sequelize.query("INSERT INTO panier_item (id_livre, quantity, id_panier) VALUES (" + idlivre + ", "+ quantity +", "+ id_panier + " );");
+})
 
 router.route('/livre/:livreId')
   /**

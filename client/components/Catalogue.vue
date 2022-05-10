@@ -9,7 +9,7 @@
         <div class="article-title">
           <h2>{{ livre.title }} - {{ livre.quantity }}</h2>
           <div>
-            <button>Ajouter au panier</button>
+            <button @click="ajouterPanier(livre)">Emprunter</button>
             <button @click="deleteLivre(livre.idlivre)">Supprimer</button>
           </div>
         </div>
@@ -48,6 +48,9 @@ module.exports = {
     },
     deleteLivre (livreId) {
       this.$emit('delete-livre', livreId)
+    },
+    ajouterPanier(livre){
+      this.$emit('ajouter-panier',livre)
     }
   },
   components:{

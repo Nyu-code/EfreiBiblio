@@ -2,18 +2,30 @@
   <div>
     <table class="Panier">
         <tr class="Produit-header">
+            <th></th>
             <th>Titre du livre</th>
             <th>Auteur</th>
             <th>Edition</th>
-            <th>Quantité</th>
             <th id="delete"></th>
         </tr>
+        <tr v-for="livre in panier" :key="livre.idlivre">
+            <td><img :src="livre.image" class="livre_image"></td>
+            <td>{{livre.title}}</td>
+            <td>{{livre.author}}</td>
+            <td>{{livre.edition}}</td>
+            <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="supprimeritem()"/></td>
+        </tr>
     </table>
+  <button id="valider">Valider</button>
   </div>
 </template>
 
 <script>
-
+module.exports ={
+    props : {
+        panier: { type:Array, default:[]}
+    }
+}
 </script>
 
 <style scoped>
@@ -65,6 +77,22 @@ tbody tr{
 
 #delete {
     padding : 10px;
+}
+
+#valider {
+    display: flex;
+    margin-left: auto;
+    margin-right: 10%;
+}
+
+.livre_image {
+    cursor: pointer;
+    width: 40%;
+}
+
+.image-suppr {
+    cursor: pointer;
+    width: 20%;
 }
 
 </style>

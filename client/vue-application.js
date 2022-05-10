@@ -19,15 +19,13 @@ var app = new Vue({
   el: '#app',
   data: {
     livres: [],
-    panier: {
-      createdAt: null,
-      updatedAt: null,
-      livres: []
-    }
+    panier: [],
   },
   async mounted () {
     const res = await axios.get('/api/livres')
+    const res2 = await axios.get('/api/panier')
     this.livres = res.data
+    this.panier = res2.data
   },
   methods: {
     async addLivre (livre) {
@@ -38,6 +36,10 @@ var app = new Vue({
       await axios.delete('/api/livre/' + livreId)
       const index = this.livres.findIndex(l => l.idlivre === livreId)
       this.livres.splice(index, 1)
+    },
+    async ajouterPanier(livre) {
+      const res = await axios.post('/api/panier/', livre)
+      this.panier.livres.push(res.data)
     }
   }
 })
