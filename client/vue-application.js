@@ -35,7 +35,6 @@ var app = new Vue({
     async deleteLivre (livreId) {
       await axios.delete('/api/livre/' + livreId)
       const index = this.livres.findIndex(l => l.idlivre === livreId)
-      this.livres.splice(index, 1)
     },
     async ajouterPanier(livre) {
       const res = await axios.post('/api/panier/', livre)
