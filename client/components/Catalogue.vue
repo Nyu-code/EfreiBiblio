@@ -5,10 +5,14 @@
       <div class="input">
           <input type="text" v-model="input" placeholder="rechercher..." id="mysearch">
       </div>
-      <span class="clear"></span>
-    </div>    <article v-for="livre in filteredList" :key="livre.idlivre">
+    </div>
+    <div class="debutcatalogue">
+      <p><b>Illustration</b></p>
+      <p><b>Description du livre</b></p>
+    </div><br>
+    <article v-for="livre in filteredList" :key="livre.idlivre">
       <div class="article-img">
-        <div :style="{ backgroundImage: 'url(' + livre.image + ')' }"></div>
+        <img :src="livre.image">
       </div>
       <div class="article-content">
         <div class="article-title">
@@ -17,6 +21,8 @@
             <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0">Emprunter</button>
             <button id="soldout" v-if="livre.quantity==0">Rupture</button>
             <button @click="deleteLivre(livre.idlivre)">Supprimer</button>
+            <button class="restock">Restocker</button>
+            <input type="text" v-model="input" placeholder="quantité">
           </div>
         </div>
         <p>Quantité restante : {{ livre.quantity }}</p>
@@ -74,26 +80,23 @@ module.exports = {
 
 <style scoped>
 .catalogue {
-  margin: 2rem 2rem;
+  margin: 0rem 2rem;
 }
 article {
   display: flex;
 }
-
 .article-img {
-  flex: 1;
+  display: flex;
+  justify-content: center;
 }
-
-.article-img div {
-  width: 100px;
-  height: 100px;
-  background-size: cover;
+.article-img img {
+  margin-bottom: 1rem;
+  width: 50%;
 }
 
 .article-content {
   flex: 3;
 }
-
 .article-title {
   display: flex;
   justify-content: space-between;
@@ -112,7 +115,7 @@ textarea {
   transition: 0.5s;
   box-shadow: 0 0 0 5px rgb(25, 25, 180);
   overflow: hidden;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .search .icon {
@@ -172,8 +175,29 @@ textarea {
 .search.active{
   width: 100%;
 }
-
+p{
+  font-size: large;
+}
 #soldout {
   background-color: red;
+}
+
+.description {
+  border-bottom: 1px solid black;
+}
+
+.restock {
+  background-color: lightgreen;
+}
+.article-content, .article-img{
+  margin-bottom: 1rem;
+  border-bottom: 1px solid black;
+}
+
+.debutcatalogue {
+  display: flex;
+}
+.debutcatalogue p{
+  margin-right: auto;
 }
 </style>

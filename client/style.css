@@ -56,16 +56,17 @@ button:hover{
 
 footer {
     margin-top: 5rem;
-    border-top: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    border-bottom: 2px solid black;
 }
 
 footer div {
     font-size: small;
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .copyrightText {
