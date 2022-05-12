@@ -1,19 +1,26 @@
 <template>
-  <div>
-    <input type="text" v-model="input" placeholder="titre">
-    <article v-for="livre in filteredList" :key="livre.idlivre">
+  <div class="catalogue">
+    <div class="search" :class="{active: isActive}">
+      <div class="icon" @click="searchactive()"></div>
+      <div class="input">
+          <input type="text" v-model="input" placeholder="rechercher..." id="mysearch">
+      </div>
+      <span class="clear"></span>
+    </div>    <article v-for="livre in filteredList" :key="livre.idlivre">
       <div class="article-img">
         <div :style="{ backgroundImage: 'url(' + livre.image + ')' }"></div>
       </div>
       <div class="article-content">
         <div class="article-title">
-          <h2>{{ livre.title }} - {{ livre.quantity }}</h2>
+          <h2>{{ livre.title }}</h2>
           <div>
-            <button @click="ajouterPanier(livre)">Emprunter</button>
+            <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0">Emprunter</button>
+            <button id="soldout" v-if="livre.quantity==0">Rupture</button>
             <button @click="deleteLivre(livre.idlivre)">Supprimer</button>
           </div>
         </div>
-        <p>Auteur: {{ livre.author }}<br>Editeur: {{ livre.edition }}</p>
+        <p>Quantité restante : {{ livre.quantity }}</p>
+        <p>Auteur: {{ livre.author }}<br>Editeur: {{ livre.edition }}</p><br>
       </div>
     </article>
     <div class="item error" v-if="input&&!filteredList.length">
@@ -27,7 +34,8 @@
 module.exports = {
   props: {
     livres: { type: Array, default: [] },
-    input:""
+    input:"",
+    isActive : true
   },
   computed: {
     filteredList() {
@@ -51,6 +59,9 @@ module.exports = {
     },
     ajouterPanier(livre){
       this.$emit('ajouter-panier',livre)
+    },
+    searchactive(){
+      this.isActive = !this.isActive;
     }
   },
   components:{
@@ -62,6 +73,9 @@ module.exports = {
 </script>
 
 <style scoped>
+.catalogue {
+  margin: 2rem 2rem;
+}
 article {
   display: flex;
 }
@@ -87,5 +101,79 @@ article {
 
 textarea {
   width: 100%;
+}
+
+.search {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 60px;
+  transition: 0.5s;
+  box-shadow: 0 0 0 5px rgb(25, 25, 180);
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.search .icon {
+  position: absolute;
+  top :0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+.search .icon::before{
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 3px solid deepskyblue;
+  border-radius: 50%;
+  transform: translate(-4px,-4px);
+}
+
+.search .icon::after{
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 12px;
+  background: deepskyblue;
+  transform: translate(6px,6px) rotate(315deg);
+}
+
+.search .input{
+  position: relative;
+  width: 300px;
+  height: 60px;
+  left: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search .input input{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  padding: 10px 0;
+}
+
+.search.active{
+  width: 100%;
+}
+
+#soldout {
+  background-color: red;
 }
 </style>
