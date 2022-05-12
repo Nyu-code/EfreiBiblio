@@ -130,5 +130,16 @@ router.route('/livre/:livreId')
     res.send()
   })
 
+router.post("/register", (req, res) => {
+  const saltRounds = 10
+  const user = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+  }
+  bcrypt.hash(user.password, saltRounds, (err, hash) => {
+    sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
+  })
+});
 
 module.exports = router

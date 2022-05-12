@@ -39,7 +39,7 @@ var app = new Vue({
     },
     async ajouterPanier(livre) {
       const res = await axios.post('/api/panier/', livre)
-      this.panier.push(res.data[0])
+      this.panier.push(res.data)
       const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
       this.livres[index].quantity = this.livres[index].quantity-1;
     }
