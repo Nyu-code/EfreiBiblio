@@ -40,7 +40,13 @@ router.post('/livres', (req, res) => {
     res.status(400).json({ message: 'bad request' })
     return
   }
-  sequelize.query("INSERT INTO livre (title, author, edition, quantity, image) VALUES ('" + title + "', '"+ author +"', '"+ edition +"', "+ quantity +", '"+ image +"' );");
+  sequelize.query("INSERT INTO livre (title, author, edition, quantity, image) VALUES ('" + title + "', '"+ author +"', '"+ edition +"', "+ quantity +", '"+ image +"' );")
+  .then(([results, metadata]) => {
+    sequelize.query("SELECT idlivre, title, author, edition, quantity, image FROM livre WHERE idlivre=(SELECT max(idlivre) FROM livre)")
+    .then(([results, metadata]) => {
+      res.json(results)
+    })
+  })
 })
 
  function parseLivre (req, res, next) {
@@ -92,9 +98,21 @@ router.route('/panier')
       if(results[0] != null){
         let newQuantity = results[0].quantity + 1;
         sequelize.query("UPDATE panier_item SET quantity = " + newQuantity + " WHERE  id_livre = " + idlivre + " AND id_panier = " + id_panier + ";")
+        .then(([results, metadata]) => {
+          sequelize.query("SELECT panier_item.id_panier, panier_item.quantity, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          .then(([results, metadata]) => {
+            res.json(results)
+          })        
+        })
       }else{
         let quantity = 1
-        sequelize.query("INSERT INTO panier_item (id_livre, quantity, id_panier) VALUES (" + idlivre + ", "+ quantity +", "+ id_panier + " );");
+        sequelize.query("INSERT INTO panier_item (id_livre, quantity, id_panier) VALUES (" + idlivre + ", "+ quantity +", "+ id_panier + " );")
+        .then(([results, metadata]) => {
+          sequelize.query("SELECT panier_item.id_panier, panier_item.quantity, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          .then(([results, metadata]) => {
+            res.json(results)
+          })
+        })
       }
     })
   })

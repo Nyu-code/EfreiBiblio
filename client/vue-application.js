@@ -30,15 +30,18 @@ var app = new Vue({
   methods: {
     async addLivre (livre) {
       const res = await axios.post('/api/livres', livre)
-      this.livres.push(res.data)
+      this.livres.push(res.data[0])
     },
     async deleteLivre (livreId) {
       await axios.delete('/api/livre/' + livreId)
       const index = this.livres.findIndex(l => l.idlivre === livreId)
+      this.livres[index].quantity = 0;
     },
     async ajouterPanier(livre) {
       const res = await axios.post('/api/panier/', livre)
-      this.panier.livres.push(res.data)
+      this.panier.push(res.data[0])
+      const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
+      this.livres[index].quantity = this.livres[index].quantity-1;
     }
   }
 })
