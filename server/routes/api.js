@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 //MDP A CHANGER
-const sequelize = new Sequelize("bd_web_efreibiblio", "root", "hugo",{
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "admin",{
   dialect:'mysql',
   host:'localhost'
 })
@@ -99,6 +99,52 @@ router.route('/panier')
     })
   })
 
+
+  router.post("/register", (req, res) => {
+    const saltRounds = 10
+    const user = {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      
+    }
+    bcrypt.hash(user.password, saltRounds, (err, hash) => {  
+      sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
+    })
+  });
+
+  router.get('/login', (req, res) => {
+    const email = req.query.email
+    const empty = ''
+    const password = req.query.password
+  
+    sequelize.query("SELECT iduser, password FROM user WHERE email = '" + email + "'")
+    .then(([results, metadata]) => {
+      if(results != empty){
+        hashedPassword = results[0].password
+        bcrypt.compare(password, hashedPassword, function(err, same){
+          if(err){
+            res.json(false)
+            return;
+          }else{
+            if (same){
+              req.session.userId = results[0].iduser
+              res.json(true)
+              return;
+            }else{
+              res.json(false)
+              return;
+            }
+          }
+        })
+      }else{
+        res.json(false)
+        return;
+      }
+    })
+  
+  })
+
 router.route('/livre/:livreId')
   /**
    * Cette route envoie un livre particulier
@@ -111,6 +157,7 @@ router.route('/livre/:livreId')
     sequelize.query("UPDATE livre SET quantity = 0 WHERE idlivre = " + req.livre.idlivre + ";")
     res.send()
   })
+
 
 
 module.exports = router
