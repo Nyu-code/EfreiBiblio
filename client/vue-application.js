@@ -41,10 +41,15 @@ var app = new Vue({
     },
     async ajouterPanier(livre) {
       const res = await axios.post('/api/panier/', livre)
-this.panier.push(res.data)
-const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
-this.livres[index].quantity = this.livres[index].quantity-1;
-},
+      const indexPanier = this.panier.findIndex(l => l.idpanier_item === res.data[0].idpanier_item)
+      if(indexPanier == -1){
+        this.panier.push(res.data[0])
+      }else{
+        this.panier[indexPanier].quantity += 1
+      }
+      const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
+      this.livres[index].quantity = this.livres[index].quantity-1;
+    },
     async addUser (user) {
       const res = await axios.post('/api/register', user)
     },
