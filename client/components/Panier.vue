@@ -6,13 +6,15 @@
             <th>Titre du livre</th>
             <th>Auteur</th>
             <th>Edition</th>
+            <th>Quantité</th>
             <th id="delete"></th>
         </tr>
-        <tr v-for="livre in panier" :key="livre.idlivre">
+        <tr v-for="livre in panier" :key="livre.idpanier_item">
             <td><img :src="livre.image" class="livre_image"></td>
             <td><b>{{livre.title}}</b></td>
             <td>{{livre.author}}</td>
             <td>{{livre.edition}}</td>
+            <td>{{livre.quantity}}</td>
             <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="supprimeritem()"/></td>
         </tr>
     </table>
