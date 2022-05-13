@@ -1,6 +1,4 @@
 const Authentification = window.httpVueLoader('./components/Authentification.vue')
-const LoginUser = window.httpVueLoader('./components/Login.vue')
-const AddUser = window.httpVueLoader('./components/Register.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Catalogue = window.httpVueLoader('./components/Catalogue.vue')
 const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue')
