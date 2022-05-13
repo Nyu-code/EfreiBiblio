@@ -21,8 +21,8 @@
             <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0">Emprunter</button>
             <button id="soldout" v-if="livre.quantity==0">Rupture</button>
             <button @click="deleteLivre(livre.idlivre)">Supprimer</button>
-            <button class="restock">Restocker</button>
-            <input type="text" v-model="input" placeholder="quantité">
+            <button @click="restockLivre(livre.idlivre, quantityInput)" class="restock">Restocker</button>
+            <input type="text" v-model="quantityInput" placeholder="quantité">
           </div>
         </div>
         <p>Quantité restante : {{ livre.quantity }}</p>
@@ -41,6 +41,7 @@ module.exports = {
   props: {
     livres: { type: Array, default: [] },
     input:"",
+    quantityInput:"",
     isActive : true
   },
   computed: {
@@ -65,6 +66,9 @@ module.exports = {
     },
     ajouterPanier(livre){
       this.$emit('ajouter-panier',livre)
+    },
+    restockLivre(idlivre, quantityInput){
+      this.$emit('restock-livre',idlivre, quantityInput)
     },
     searchactive(){
       this.isActive = !this.isActive;
