@@ -50,6 +50,13 @@ var app = new Vue({
       const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
       this.livres[index].quantity = this.livres[index].quantity-1;
     },
+    async deletePanier(panierId) {
+      const res = await axios.delete('/api/panier/'+ panierId)
+      const indexPanier = this.panier.findIndex(l => l.idpanier_item === panierId)
+      this.panier.splice(indexPanier, 1)
+      const index = this.livres.findIndex(l => l.idlivre === res.data[0].id_livre)
+      this.livres[index].quantity = this.livres[index].quantity+res.data[0].quantity;
+    },
     async addUser (user) {
       const res = await axios.post('/api/register', user)
     },

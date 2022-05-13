@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 //MDP A CHANGER
-const sequelize = new Sequelize("bd_web_efreibiblio", "root", "1069071822",{
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "hugo",{
   dialect:'mysql',
   host:'localhost'
 })
@@ -73,7 +73,7 @@ router.post('/livres', (req, res) => {
 }
 
 router.get('/panier', (req, res) => {
-  sequelize.query("SELECT panier_item.id_panier, panier_item.quantity, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = panier_item.id_livre AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+  sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre,livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = panier_item.id_livre AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
   .then(([results, metadata]) => {
     res.json(results)
   })
@@ -99,7 +99,7 @@ router.route('/panier')
         let newQuantity = results[0].quantity + 1;
         sequelize.query("UPDATE panier_item SET quantity = " + newQuantity + " WHERE  id_livre = " + idlivre + " AND id_panier = " + id_panier + ";")
         .then(([results, metadata]) => {
-          sequelize.query("SELECT panier_item.id_panier, panier_item.quantity, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
           .then(([results, metadata]) => {
             res.json(results)
           })        
@@ -108,13 +108,26 @@ router.route('/panier')
         let quantity = 1
         sequelize.query("INSERT INTO panier_item (id_livre, quantity, id_panier) VALUES (" + idlivre + ", "+ quantity +", "+ id_panier + " );")
         .then(([results, metadata]) => {
-          sequelize.query("SELECT panier_item.id_panier, panier_item.quantity, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
           .then(([results, metadata]) => {
             res.json(results)
           })
         })
       }
     })
+  })
+
+  router.delete('/panier/:panierId', (req, res) => {
+    const panierId = req.params.panierId
+    sequelize.query("SELECT id_livre, quantity FROM panier_item WHERE idpanier_item = " + panierId + ";")
+    .then(([results, metadata]) => {
+      sequelize.query("DELETE FROM panier_item WHERE idpanier_item = " + panierId + ";")
+      var resultats = results;
+      sequelize.query("UPDATE livre SET quantity = quantity + " + results[0].quantity + " WHERE idlivre = " + results[0].id_livre + ";")
+      .then(([results, metadata]) => {
+        res.json(resultats)
+      }) 
+    })  
   })
 
 

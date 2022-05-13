@@ -15,10 +15,11 @@
             <td>{{livre.author}}</td>
             <td>{{livre.edition}}</td>
             <td>{{livre.quantity}}</td>
-            <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="supprimeritem()"/></td>
+            <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="deletePanier(livre.idpanier_item)"/></td>
         </tr>
     </table>
-  <button id="valider">Valider</button>
+    <button id="vider" v-on:click="deleteAll()">Vider</button>
+    <button id="valider">Valider</button>
   </div>
 </template>
 
@@ -26,7 +27,17 @@
 module.exports ={
     props : {
         panier: { type:Array, default:[]}
-    }
+    },
+    methods: {
+        deletePanier (panierId) {
+            this.$emit('delete-panier', panierId)
+        },
+        deleteAll(){
+            this.panier.forEach(livre => {
+                this.deletePanier(livre.idpanier_item)
+            });
+        }
+  }
 }
 </script>
 
