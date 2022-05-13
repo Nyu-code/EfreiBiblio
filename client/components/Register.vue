@@ -1,10 +1,10 @@
 <template>
   <div>
     <form id=form @submit.prevent="addUser">
-      <input type="text" v-model="newUser.username" placeholder="nom utilisateur">
-      <input type="email" v-model="newUser.email" placeholder="adresse mail">
-      <input type="password" v-model="newUser.password" placeholder="mot de passe">
-      <button type="submit"> S'inscrire</button>
+      <input type="text" v-model="newUser.username" placeholder="nom utilisateur" required>
+      <input type="email" v-model="newUser.email" placeholder="adresse mail" required>
+      <input type="password" v-model="newUser.password" placeholder="mot de passe" required>
+      <button type="submit">S'inscrire</button>
     </form>
   </div>
 </template>

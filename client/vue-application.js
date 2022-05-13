@@ -1,6 +1,6 @@
 const Authentification = window.httpVueLoader('./components/Authentification.vue')
-const Login = window.httpVueLoader('./components/Login.vue')
-const Register = window.httpVueLoader('./components/Register.vue')
+const LoginUser = window.httpVueLoader('./components/Login.vue')
+const AddUser = window.httpVueLoader('./components/Register.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Catalogue = window.httpVueLoader('./components/Catalogue.vue')
 const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue')
@@ -49,6 +49,14 @@ var app = new Vue({
       }
       const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
       this.livres[index].quantity = this.livres[index].quantity-1;
+    },
+    async restockLivre(idlivre, quantityInput) {
+      const newQuantity = {
+        quantity: quantityInput
+      }
+      const res = await axios.put("/api/panier/" + idlivre, newQuantity)
+      const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
+      this.livres[index].quantity = res.data[0]
     },
     async deletePanier(panierId) {
       const res = await axios.delete('/api/panier/'+ panierId)

@@ -1,32 +1,23 @@
 <template>
   <div>
-      <Register @add-user = 'addUser'></Register>
-      <Login @login-user='loginUser'></Login>
+      <add-user @add-user = 'addUser'></add-user>
+      <login-user @login-user='loginUser'></login-user>
   </div>
 </template>
 
 <script>
   module.exports = {
-    data(){
-      return{
-        newUser: {
-          username:'',
-          email:'',
-          password:''
-        }
-      }
-    },
     methods: {
-      addUser () {
-        this.$emit('add-user', this.newUser)
+      addUser (newuser) {
+        this.$emit('add-user', newuser)
       },
-      loginUser () {
-        this.$emit('login-user', this.user)       
+      loginUser (user) {
+        this.$emit('login-user', user)       
       }
     },
     components:{
-      Login,
-      Register
+      LoginUser,
+      AddUser
     },
   }
 
