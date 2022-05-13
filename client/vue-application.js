@@ -1,12 +1,12 @@
 const Authentification = window.httpVueLoader('./components/Authentification.vue')
-const login = window.httpVueLoader('./components/Login.vue')
+const Login = window.httpVueLoader('./components/Login.vue')
+const Register = window.httpVueLoader('./components/Register.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Catalogue = window.httpVueLoader('./components/Catalogue.vue')
 const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue')
 
 const routes = [
   { path: '/authentification', component: Authentification },
-  { path: '/login', component: login },
   { path: '/catalogue', component: Catalogue },
   { path: '/panier', component: Panier }
 ]
@@ -64,7 +64,7 @@ var app = new Vue({
       const res = await axios.get('/api/login', { params: { email: user.email, password: user.password } })
 
       if(res.data){
-        this.$router.push({ path: '/home' })
+        this.$router.push({ path: '/' })
       }else{
           alert("Utilisateur n'existe pas ou mauvais mot de passe")
       } 

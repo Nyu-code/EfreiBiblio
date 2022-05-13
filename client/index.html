@@ -28,14 +28,12 @@
           </header>
           <main>
               <router-view
-              :catalogue="catalogue"
               :panier="panier"
               :livres="livres"
               @ajouter-panier="ajouterPanier"
               @delete-panier="deletePanier"
               @add-livre="addLivre"
               @delete-livre="deleteLivre"
-
               @add-user="addUser"
               @login-user="loginUser"
               ></router-view>

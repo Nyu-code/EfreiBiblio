@@ -1,7 +1,11 @@
 <template>
   <div>
-      <Register @add-user = 'addUser'></Register>
-      <Login @login-user='loginUser'></Login>
+    <form id=form @submit.prevent="addUser">
+      <input type="text" v-model="newUser.username" placeholder="nom utilisateur">
+      <input type="email" v-model="newUser.email" placeholder="adresse mail">
+      <input type="password" v-model="newUser.password" placeholder="mot de passe">
+      <button type="submit"> S'inscrire</button>
+    </form>
   </div>
 </template>
 
@@ -19,15 +23,8 @@
     methods: {
       addUser () {
         this.$emit('add-user', this.newUser)
-      },
-      loginUser () {
-        this.$emit('login-user', this.user)       
       }
-    },
-    components:{
-      Login,
-      Register
-    },
+    }
   }
 
 </script>
