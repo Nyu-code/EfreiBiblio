@@ -1,19 +1,25 @@
 <template>
-    <div>
-        <form @submit.prevent="loginUser">
-            <div class="container">
-                <label for="email"><b>Email</b></label>
-                <input type="text" v-model="user.email" placeholder="Enter Email" name="email" required>
-
-                <label for="psw"><b>Password</b></label>
-                <input type="password" v-model="user.password" placeholder="Enter Password" name="psw" required>
-
-                <button type="submit">Login</button>
+  <div>
+    <div class="container">
+      <div class="forms-container">
+        <div class="signin-signup">
+          <form @submit.prevent="loginUser">
+            <h2 class="title">Se connecter</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" v-model="user.email" placeholder="Enter Email" name="email" required>
             </div>
-        </form>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" v-model="user.password" placeholder="Enter Password" name="psw" required>
+            </div>
+            <button type="submit" value="Login" class="btn solid">Connecter</button>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
-
 <script>
 module.exports = {
   props: {
@@ -36,35 +42,88 @@ module.exports = {
 </script>
 
 <style scoped>
-form {
-  border: 3px solid #f1f1f1;
-}
-
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
+*{
   box-sizing: border-box;
 }
-
-button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
+.container{
+  position: relative;
   width: 100%;
+  min-height: 100vh;
+  background-color: white;
+  overflow: hidden;
 }
 
-button:hover {
-  opacity: 0.8;
+.forms-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
-/* Add padding to containers */
-.container {
-  padding: 16px;
+form{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.title{
+  font-size: 2.2rem;
+  color:#333;
+  margin-bottom: 10px;
+}
+
+.input-field{
+  max-width: 380px;
+  width: 100%;
+  height: 65px;
+  background-color: lightgrey;
+  margin: 10px 0;
+  border-radius: 55px;
+  display: grid;
+  grid-template-columns: 15% 85%;
+  padding: 0.4rem;
+
+}
+
+.input-field i {
+  text-align: center;
+  line-height: 55px;
+  color: darkgray;
+  font-size: 1.1rem;
+}
+
+.input-field input {
+  background: none;
+  outline: none;
+  border: none;
+  line-height: 1;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: black;
+}
+
+.input-field input::placeholder {
+  color: darkgray;
+  font-weight: 500;
+}
+
+.btn{
+  width: 300px;
+  height: 50px;
+  border: none;
+  outline: none;
+  border-radius: 50px;
+  cursor: pointer;
+  background-color: cornflowerblue;
+  color : white;
+  text-transform: 600;
+  margin: 10px 0;
+  transition: 0.5s;
+}
+
+.btn:hover{
+  background-color: dodgerblue;
 }
 </style>
