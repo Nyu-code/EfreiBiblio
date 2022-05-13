@@ -17,7 +17,7 @@
               <i class="fas fa-lock"></i>
               <input type="password" v-model="newUser.password" placeholder="Mot de passe">
             </div>
-              <button type="submit" class="btn solid"> S'inscrire</button>
+              <button type="submit" value="Sign up" class="btn solid"> S'inscrire</button>
           </form>
         </div>
       </div>
@@ -124,7 +124,8 @@ form{
   cursor: pointer;
   background-color: cornflowerblue;
   color : white;
-  text-transform: 600;
+  text-transform: uppercase;
+  font-weight: 600;
   margin: 10px 0;
   transition: 0.5s;
 }

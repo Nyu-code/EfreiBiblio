@@ -3,7 +3,7 @@
     <div class="container">
       <div class="forms-container">
         <div class="signin-signup">
-          <form @submit.prevent="loginUser">
+          <form class="sign-up-form" @submit.prevent="loginUser">
             <h2 class="title">Se connecter</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -14,6 +14,22 @@
               <input type="password" v-model="user.password" placeholder="Enter Password" name="psw" required>
             </div>
             <button type="submit" value="Login" class="btn solid">Connecter</button>
+          </form>
+          <form @submit.prevent="addUser" class="sign-in-form">
+            <h2 class="title">S'inscrire</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" v-model="newUser.username" placeholder="Nom d'utilisateur">
+            </div>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input type="email" v-model="newUser.email" placeholder="Adresse mail">
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" v-model="newUser.password" placeholder="Mot de passe">
+            </div>
+              <button type="submit" value="Sign up" class="btn solid"> S'inscrire</button>
           </form>
         </div>
       </div>
@@ -126,4 +142,5 @@ form{
 .btn:hover{
   background-color: dodgerblue;
 }
+
 </style>
