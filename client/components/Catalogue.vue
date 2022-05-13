@@ -1,48 +1,57 @@
 <template>
-  <div class="catalogue">
-    <div class="search" :class="{active: isActive}">
-      <div class="icon" @click="searchactive()"></div>
-      <div class="input">
-          <input type="text" v-model="input" placeholder="rechercher..." id="mysearch">
-      </div>
-    </div>
-    <div class="debutcatalogue">
-      <p><b>Illustration</b></p>
-      <p><b>Description du livre</b></p>
-    </div><br>
-    <article v-for="livre in filteredList" :key="livre.idlivre">
-      <div class="article-img">
-        <img :src="livre.image">
-      </div>
-      <div class="article-content">
-        <div class="article-title">
-          <h2>{{ livre.title }}</h2>
-          <div>
-            <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0">Emprunter</button>
-            <button id="soldout" v-if="livre.quantity==0">Rupture</button>
-            <button @click="deleteLivre(livre.idlivre)">Supprimer</button>
-            <button @click="restockLivre(livre.idlivre, quantityInput)" class="restock">Restocker</button>
-            <input type="text" v-model="quantityInput" placeholder="quantité">
-          </div>
+    <div class="catalogue">
+      <div class="search" :class="{active: isActive}">
+        <div class="icon" @click="searchactive()"></div>
+        <div class="input">
+            <input type="text" v-model="input" placeholder="rechercher..." id="mysearch">
         </div>
-        <p>Quantité restante : {{ livre.quantity }}</p>
-        <p>Auteur: {{ livre.author }}<br>Editeur: {{ livre.edition }}</p><br>
       </div>
-    </article>
-    <div class="item error" v-if="input&&!filteredList.length">
-      <p>Pas de résultats!</p>
+      <div class="debutcatalogue">
+        <p><b>Illustration</b></p>
+        <p><b>Description du livre</b></p>
+      </div><br>
+      <article v-for="livre in filteredList" :key="livre.idlivre">
+        <div class="article-img">
+          <img :src="livre.image">
+        </div>
+        <div class="article-content">
+          <div class="article-title">
+            <h2>{{ livre.title }}</h2>
+            <div>
+              <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0&&isConnected" >Emprunter</button>
+              <button id="soldout" v-if="livre.quantity==0&&isConnected">Rupture</button>
+              <button v-if="isAdmin" @click="deleteLivre(livre.idlivre)">Supprimer</button>
+              <button v-if="isAdmin" @click="restockLivre(livre)" class="restock">Restocker</button>
+              <input v-if="isAdmin" type="text" v-model="quantity.addedQuantity" placeholder="quantité">
+            </div>
+          </div>
+          <p>Quantité restante : {{ livre.quantity }}</p>
+          <p>Auteur: {{ livre.author }}<br>Editeur: {{ livre.edition }}</p><br>
+        </div>
+      </article>
+      <div class="item error" v-if="input&&!filteredList.length">
+        <p>Pas de résultats!</p>
+      </div>
+      <add-livre v-if="isAdmin" @add-livre='addLivre'></add-livre>
     </div>
-    <add-livre @add-livre='addLivre'></add-livre>
-  </div>
 </template>
 
 <script>
 module.exports = {
+  data(){
+      return{
+        quantity: {
+          addedQuantity:'',
+          oldQuantity:''
+        }
+      }
+  },
   props: {
     livres: { type: Array, default: [] },
     input:"",
-    quantityInput:"",
-    isActive : true
+    isActive : true,
+    isAdmin: { type: Boolean, default: false },
+    isConnected: { type: Boolean, default: false }
   },
   computed: {
     filteredList() {
@@ -67,11 +76,15 @@ module.exports = {
     ajouterPanier(livre){
       this.$emit('ajouter-panier',livre)
     },
-    restockLivre(idlivre, quantityInput){
-      this.$emit('restock-livre',idlivre, quantityInput)
+    restockLivre(livre){
+      this.quantity.oldQuantity = livre.quantity
+      this.$emit('restock-livre',livre.idlivre, this.quantity)
     },
     searchactive(){
       this.isActive = !this.isActive;
+    },
+    test(){
+      console.log("IS CONNECTED : " +this.isConnected)
     }
   },
   components:{

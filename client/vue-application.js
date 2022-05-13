@@ -22,12 +22,12 @@ var app = new Vue({
   data: {
     livres: [],
     panier: [],
+    isAdmin: false,
+    isConnected: false
   },
   async mounted () {
     const res = await axios.get('/api/livres')
-    const res2 = await axios.get('/api/panier')
     this.livres = res.data
-    this.panier = res2.data
   },
   methods: {
     async addLivre (livre) {
@@ -50,13 +50,10 @@ var app = new Vue({
       const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
       this.livres[index].quantity = this.livres[index].quantity-1;
     },
-    async restockLivre(idlivre, quantityInput) {
-      const newQuantity = {
-        quantity: quantityInput
-      }
-      const res = await axios.put("/api/panier/" + idlivre, newQuantity)
-      const index = this.livres.findIndex(l => l.idlivre === livre.idlivre)
-      this.livres[index].quantity = res.data[0]
+    async restockLivre(idlivre, quantity) {
+      const res = await axios.put("/api/livre/" + idlivre, quantity)
+      const index = this.livres.findIndex(l => l.idlivre === idlivre)
+      this.livres[index].quantity = res.data
     },
     async deletePanier(panierId) {
       const res = await axios.delete('/api/panier/'+ panierId)
@@ -69,9 +66,13 @@ var app = new Vue({
       const res = await axios.post('/api/register', user)
     },
     async loginUser (user) {
-      const res = await axios.get('/api/login', { params: { email: user.email, password: user.password } })
-
+      const res = await axios.post('/api/login', user)
       if(res.data){
+        const res2 = await axios.get('/api/panier')
+        this.panier = res2.data
+        this.isConnected = true
+        const res3 = await axios.get('/api/checkAdmin')
+        this.isAdmin = Boolean(res3.data[0].isAdmin)
         this.$router.push({ path: '/' })
       }else{
           alert("Utilisateur n'existe pas ou mauvais mot de passe")

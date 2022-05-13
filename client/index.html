@@ -24,12 +24,14 @@
                     <li><router-link to='/Panier'>Panier</router-link></li>
                   </ul>
               </nav>
-              <router-link to="/Authentification"><button>Login</button></router-link>
+              <router-link to="/Authentification"><button>S'authentifier</button></router-link>
           </header>
           <main>
               <router-view
               :panier="panier"
               :livres="livres"
+              :is-connected="isConnected"
+              :is-admin="isAdmin"
               @ajouter-panier="ajouterPanier"
               @delete-panier="deletePanier"
               @add-livre="addLivre"

@@ -50,7 +50,7 @@ router.post('/livres', (req, res) => {
 })
 
 router.get('/panier', (req, res) => {
-  sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre,livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = panier_item.id_livre AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+  sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre,livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE livre.idlivre = panier_item.id_livre AND panier_item.id_panier = " + req.session.panierId)
   .then(([results, metadata]) => {
     res.json(results)
   })
@@ -69,14 +69,14 @@ function lowerQuantity (req, res, next) {
 router.route('/panier')
   .post(lowerQuantity, (req, res) => {
     const idlivre = req.body.idlivre
-    const id_panier = 1  //req.session.panier.idpanier
+    const id_panier = req.session.panierId
     sequelize.query("SELECT quantity FROM panier_item WHERE id_livre = " + idlivre + " AND id_panier = " + id_panier + ";")
     .then(([results, metadata]) => {
       if(results[0] != null){
         let newQuantity = results[0].quantity + 1;
         sequelize.query("UPDATE panier_item SET quantity = " + newQuantity + " WHERE  id_livre = " + idlivre + " AND id_panier = " + id_panier + ";")
         .then(([results, metadata]) => {
-          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = " + id_panier)
           .then(([results, metadata]) => {
             res.json(results)
           })        
@@ -85,7 +85,7 @@ router.route('/panier')
         let quantity = 1
         sequelize.query("INSERT INTO panier_item (id_livre, quantity, id_panier) VALUES (" + idlivre + ", "+ quantity +", "+ id_panier + " );")
         .then(([results, metadata]) => {
-          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = (SELECT idpanier FROM panier WHERE id_user = 1)")
+          sequelize.query("SELECT panier_item.idpanier_item, panier_item.quantity, livre.idlivre, livre.title, livre.author, livre.edition, livre.image FROM livre, panier_item WHERE panier_item.id_livre = livre.idlivre AND livre.idlivre = " + idlivre + " AND panier_item.id_panier = " + id_panier)
           .then(([results, metadata]) => {
             res.json(results)
           })
@@ -95,10 +95,11 @@ router.route('/panier')
   })
 
   router.delete('/panier/:panierId', (req, res) => {
-    const panierId = req.params.panierId
-    sequelize.query("SELECT id_livre, quantity FROM panier_item WHERE idpanier_item = " + panierId + ";")
+    const panierItemId = req.params.panierId
+    const panierId = req.sessions.panierId
+    sequelize.query("SELECT id_livre, quantity FROM panier_item WHERE idpanier_item = " + panierItemId + " AND id_panier = "+ panierId + ";")
     .then(([results, metadata]) => {
-      sequelize.query("DELETE FROM panier_item WHERE idpanier_item = " + panierId + ";")
+      sequelize.query("DELETE FROM panier_item WHERE idpanier_item = " + panierItemId + " AND id_panier = "+ panierId + ";")
       var resultats = results;
       sequelize.query("UPDATE livre SET quantity = quantity + " + results[0].quantity + " WHERE idlivre = " + results[0].id_livre + ";")
       .then(([results, metadata]) => {
@@ -117,16 +118,28 @@ router.route('/panier')
       
     }
     bcrypt.hash(user.password, saltRounds, (err, hash) => {  
-      sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
+      sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");")
+      .then(([results, metadata]) => {
+        sequelize.query("SELECT iduser FROM user WHERE email = '" + user.email + "';")
+        .then(([results, metadata]) => {
+          sequelize.query("INSERT INTO panier(id_user) VALUES (" + results[0].iduser + ");")
+        })
+      })
     })
   });
 
-  router.get('/login', (req, res) => {
-    const email = req.query.email
+  router.get('/checkAdmin', (req, res) => {
+    sequelize.query("SELECT isAdmin FROM user, panier WHERE iduser = " + req.session.userId)
+    .then(([results, metadata]) => {
+      res.json(results)
+    })
+  })
+  router.post('/login', (req, res) => {
+    const email = req.body.email
     const empty = ''
-    const password = req.query.password
-  
-    sequelize.query("SELECT iduser, password FROM user WHERE email = '" + email + "'")
+    const password = req.body.password
+
+    sequelize.query("SELECT idpanier, iduser, password FROM user, panier WHERE iduser = id_user AND email = '" + email + "'")
     .then(([results, metadata]) => {
       if(results != empty){
         hashedPassword = results[0].password
@@ -136,6 +149,7 @@ router.route('/panier')
             return;
           }else{
             if (same){
+              req.session.panierId = results[0].idpanier
               req.session.userId = results[0].iduser
               res.json(true)
               return;
@@ -191,12 +205,13 @@ router.route('/livre/:livreId')
   })
 
   .put(parseLivre, (req, res) => {
-    if(req.body.quantity <= 0){
+    let newQuantity = parseInt(req.body.addedQuantity) + parseInt(req.body.oldQuantity)
+    if(newQuantity <= 0){
       res.status(400).json({message : 'Quantité non valide ... '})
       return
     }
-    sequelize.query("UPDATE livre SET quantity = " + parseInt(req.body.quantity) + " WHERE idlivre = " + req.livre.idlivre + ";")
-    res.json(parseInt(req.body.quantity))
+    sequelize.query("UPDATE livre SET quantity = " + newQuantity + " WHERE idlivre = " + req.livre.idlivre + ";")
+    res.json(newQuantity)
   })
 
 router.post("/register", (req, res) => {

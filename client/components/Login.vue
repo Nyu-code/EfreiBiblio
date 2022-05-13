@@ -16,9 +16,6 @@
 
 <script>
 module.exports = {
-  props: {
-    resLogin: { type: Boolean }
-  },
   data () {
     return {
       user: {
