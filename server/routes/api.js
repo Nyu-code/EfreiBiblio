@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 //MDP A CHANGER
-const sequelize = new Sequelize("bd_web_efreibiblio", "root", "1069071822",{
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "hugo",{
   dialect:'mysql',
   host:'localhost'
 })
@@ -96,7 +96,7 @@ router.route('/panier')
 
   router.delete('/panier/:panierId', (req, res) => {
     const panierItemId = req.params.panierId
-    const panierId = req.sessions.panierId
+    const panierId = req.session.panierId
     sequelize.query("SELECT id_livre, quantity FROM panier_item WHERE idpanier_item = " + panierItemId + " AND id_panier = "+ panierId + ";")
     .then(([results, metadata]) => {
       sequelize.query("DELETE FROM panier_item WHERE idpanier_item = " + panierItemId + " AND id_panier = "+ panierId + ";")

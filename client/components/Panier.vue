@@ -19,7 +19,7 @@
         </tr>
     </table>
     <button id="vider" v-on:click="deleteAll()">Vider</button>
-    <button id="valider">Valider</button>
+    <button id="valider" v-on:click="deleteAll()">Valider</button>
   </div>
 </template>
 
