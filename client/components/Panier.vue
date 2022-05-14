@@ -1,34 +1,40 @@
 <template>
-  <div>
-    <table class="Panier">
-        <tr class="Produit-header">
-            <th></th>
-            <th>Titre du livre</th>
-            <th>Auteur</th>
-            <th>Edition</th>
-            <th>Quantité</th>
-            <th id="delete"></th>
-        </tr>
-        <tr v-for="livre in panier" :key="livre.idpanier_item">
-            <td><img :src="livre.image" class="livre_image"></td>
-            <td><b>{{livre.title}}</b></td>
-            <td>{{livre.author}}</td>
-            <td>{{livre.edition}}</td>
-            <td>{{livre.quantity}}</td>
-            <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="deletePanier(livre.idpanier_item)"/></td>
-        </tr>
-    </table>
-    <div class="boutons_panier">
-        <button id="vider" v-on:click="deleteAll()">Vider</button>
-        <button id="valider" v-on:click="deleteAll()">Valider</button>
+    <div>
+        <div v-if="isConnected">
+            <table class="Panier">
+                <tr class="Produit-header">
+                    <th></th>
+                    <th>Titre du livre</th>
+                    <th>Auteur</th>
+                    <th>Edition</th>
+                    <th>Quantité</th>
+                    <th id="delete"></th>
+                </tr>
+                <tr v-for="livre in panier" :key="livre.idpanier_item">
+                    <td><img :src="livre.image" class="livre_image"></td>
+                    <td><b>{{livre.title}}</b></td>
+                    <td>{{livre.author}}</td>
+                    <td>{{livre.edition}}</td>
+                    <td>{{livre.quantity}}</td>
+                    <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="deletePanier(livre.idpanier_item)"/></td>
+                </tr>
+            </table>
+            <div class="boutons_panier">
+                <button id="vider" v-on:click="deleteAll()">Vider</button>
+                <button id="valider" v-on:click="deleteAll()">Valider</button>
+            </div>
+        </div>
+        <div v-if="!isConnected">
+            <p> Il faut vous authentifier ! </p>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 module.exports ={
     props : {
-        panier: { type:Array, default:[]}
+        panier: { type:Array, default:[]},
+        isConnected: { type: Boolean, default: false }
     },
     methods: {
         deletePanier (panierId) {
