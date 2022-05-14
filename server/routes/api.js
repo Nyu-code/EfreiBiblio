@@ -183,7 +183,7 @@ router.route('/panier')
         const user = {
           email: req.body.email,
         }
-        if(results != empty && email && password){
+        if(results != empty){
           hashedPassword = results[0].password
           bcrypt.compare(password, hashedPassword, function(err, same){
             if(err){
@@ -283,13 +283,10 @@ router.post("/register", (req, res) => {
     email: req.body.email,
     password: req.body.password,
   }
-  if(!(email && username && password)){
-    res.status(400).send("Saisie invalide");
-  }else{
       bcrypt.hash(user.password, saltRounds, (err, hash) => {
         sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
     })
-  }
+  
 
 });
 
