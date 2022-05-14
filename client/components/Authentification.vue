@@ -19,15 +19,15 @@
           <h2 class="title">S'inscrire</h2>
           <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" v-model="newUser.username" placeholder="Nom d'utilisateur">
+            <input type="text" v-model="newUser.username" placeholder="Nom d'utilisateur" required>
           </div>
           <div class="input-field">
             <i class="fas fa-envelope"></i>
-            <input type="email" v-model="newUser.email" placeholder="Adresse mail">
+            <input type="email" v-model="newUser.email" placeholder="Adresse mail" required>
           </div>
           <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" v-model="newUser.password" placeholder="Mot de passe">
+            <input type="password" v-model="newUser.password" placeholder="Mot de passe" required>
           </div>
             <button type="submit" value="Sign up" class="btn solid"> S'inscrire</button>
         </form>

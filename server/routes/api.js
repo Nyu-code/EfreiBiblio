@@ -3,6 +3,7 @@ const router = express.Router()
 const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 //MDP A CHANGER
 const sequelize = new Sequelize("bd_web_efreibiblio", "root", "1069071822",{
   dialect:'mysql',
@@ -134,38 +135,87 @@ router.route('/panier')
       res.json(results)
     })
   })
-  router.post('/login', (req, res) => {
-    const email = req.body.email
-    const empty = ''
-    const password = req.body.password
 
-    sequelize.query("SELECT idpanier, iduser, password FROM user, panier WHERE iduser = id_user AND email = '" + email + "'")
-    .then(([results, metadata]) => {
-      if(results != empty){
-        hashedPassword = results[0].password
-        bcrypt.compare(password, hashedPassword, function(err, same){
-          if(err){
-            res.json(false)
-            return;
-          }else{
-            if (same){
-              req.session.panierId = results[0].idpanier
-              req.session.userId = results[0].iduser
-              res.json(true)
-              return;
-            }else{
-              res.json(false)
-              return;
-            }
-          }
-        })
+  router.post('/posts', verifyToken,(req,res)=>{
+    jwt.verify(req.token, 'sdgsdgksfdngsgksd',(err,authData) =>{
+      if(err){
+        res.sendStatus(403) //forbidden
       }else{
-        res.json(false)
-        return;
+        res.json({
+          message:"créé",
+          authData,
+        })
       }
     })
-  
   })
+
+  let refreshTokens = []
+  router.post('/token', (req,res) =>{
+    const refreshToken = req.body.token
+    if(refreshToken == null){
+      return res.sendStatus(401)
+    }
+    if(!refreshTokens.includes(refreshToken)){
+      return res.sendStatus(403)
+    }
+    jwt.verify(refreshToken,'jsdqngsdnjqsnsqdnvcjlznz63457435645', (err, user) => {
+      if(err){
+        return res.sendStatus(403)
+      }
+      const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'45s'})
+      res.json({token: token})
+    })
+  })
+
+  router.delete('/logoutTo', (req,res) =>{
+    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+    res.sendStatus(204)
+  })
+
+  router.post('/login', (req, res) => {
+    try{
+      const email = req.body.email
+      const empty = ''
+      const password = req.body.password
+
+      sequelize.query("SELECT idpanier, iduser, password, username FROM user, panier WHERE iduser = id_user AND email = '" + email + "'")
+      .then(([results, metadata]) => {
+        const user = {
+          email: req.body.email,
+        }
+        if(results != empty){
+          hashedPassword = results[0].password
+          bcrypt.compare(password, hashedPassword, function(err, same){
+            if(err){
+              res.json(false)
+              return;
+            }else{
+              
+              if (same){
+                req.session.panierId = results[0].idpanier
+                req.session.userId = results[0].iduser
+                const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'15s'})
+                const refreshToken = jwt.sign(user, "jsdqngsdnjqsnsqdnvcjlznz63457435645")
+                refreshTokens.push(refreshToken)
+                res.json({token: token, refreshToken: refreshToken})
+                return;
+              }else{
+                res.json(false)
+                return;
+              }
+            }
+          })
+        }else{
+          res.json(false)
+          return;
+        }
+      })
+    }catch(err){
+        console.log(err)
+      }
+  })
+
+
 
 
 function parseLivre (req, res, next) {
@@ -214,6 +264,18 @@ router.route('/livre/:livreId')
     res.json(newQuantity)
   })
 
+
+  function verifyToken(req,res,next){
+    const bearerHeader = req.headers['authorization']
+    if(typeof bearerHeader !== 'undefined'){
+      const bearerToken = bearerHeader.split(' ')[1]
+      req.token = bearerToken
+      next()
+    }else{
+      res.sendStatus(403)
+    }
+  }
+
 router.post("/register", (req, res) => {
   const saltRounds = 10
   const user = {
@@ -221,9 +283,11 @@ router.post("/register", (req, res) => {
     email: req.body.email,
     password: req.body.password,
   }
-  bcrypt.hash(user.password, saltRounds, (err, hash) => {
-    sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
-  })
+      bcrypt.hash(user.password, saltRounds, (err, hash) => {
+        sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
+    })
+  
+
 });
 
 
