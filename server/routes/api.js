@@ -116,21 +116,37 @@ router.route('/panier')
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      
     }
-    bcrypt.hash(user.password, saltRounds, (err, hash) => {  
-      sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");")
-      .then(([results, metadata]) => {
-        sequelize.query("SELECT iduser FROM user WHERE email = '" + user.email + "';")
-        .then(([results, metadata]) => {
-          sequelize.query("INSERT INTO panier(id_user) VALUES (" + results[0].iduser + ");")
+    sequelize.query("SELECT iduser FROM user WHERE email = '"+ user.email + "'")
+    .then(([results, metadata]) => {
+      if(results.length<1){
+        bcrypt.hash(user.password, saltRounds, (err, hash) => {  
+          sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");")
+          .then(([results, metadata]) => {
+            sequelize.query("SELECT iduser FROM user WHERE email = '" + user.email + "';")
+            .then(([results, metadata]) => {
+              sequelize.query("INSERT INTO panier(id_user) VALUES (" + results[0].iduser + ");")
+              .then(([results, metadata]) => {
+                res.json(true)
+              })
+            })
+          })
         })
-      })
+      }else{
+        res.json(false)
+      }
     })
   });
 
   router.get('/checkAdmin', (req, res) => {
     sequelize.query("SELECT isAdmin FROM user, panier WHERE iduser = " + req.session.userId)
+    .then(([results, metadata]) => {
+      res.json(results)
+    })
+  })
+
+  router.get('/getUser', (req, res) => {
+    sequelize.query("SELECT username FROM user WHERE iduser = " + req.session.userId)
     .then(([results, metadata]) => {
       res.json(results)
     })
@@ -275,20 +291,6 @@ router.route('/livre/:livreId')
       res.sendStatus(403)
     }
   }
-
-router.post("/register", (req, res) => {
-  const saltRounds = 10
-  const user = {
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-  }
-      bcrypt.hash(user.password, saltRounds, (err, hash) => {
-        sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
-    })
-  
-
-});
 
 
 module.exports = router

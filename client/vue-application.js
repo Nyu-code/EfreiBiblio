@@ -1,7 +1,7 @@
 const Authentification = window.httpVueLoader('./components/Authentification.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Catalogue = window.httpVueLoader('./components/Catalogue.vue')
-const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue')
+const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue');
 
 const routes = [
   { path: '/authentification', component: Authentification },
@@ -21,7 +21,8 @@ var app = new Vue({
     livres: [],
     panier: [],
     isAdmin: false,
-    isConnected: false
+    isConnected: false,
+    username: ''
   },
   async mounted () {
     const res = await axios.get('/api/livres')
@@ -62,6 +63,11 @@ var app = new Vue({
     },
     async addUser (user) {
       const res = await axios.post('/api/register', user)
+      if(res.data){
+        alert( "Votre compte a été créé! Connectez-vous !")
+      }else{
+        alert("L'email est déjà utilisé")
+      }
     },
     async loginUser (user) {
       const res = await axios.post('/api/login', user)
@@ -71,7 +77,10 @@ var app = new Vue({
         this.isConnected = true
         const res3 = await axios.get('/api/checkAdmin')
         this.isAdmin = Boolean(res3.data[0].isAdmin)
+        const res4 = await axios.get('/api/checkAdmin')
+        this.username = res4.data[0].username
         this.$router.push({ path: '/' })
+        alert("Connexion réussite")
       }else{
           alert("Utilisateur n'existe pas ou mauvais mot de passe")
       } 
