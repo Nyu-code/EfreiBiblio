@@ -19,7 +19,7 @@
             <h2>{{ livre.title }}</h2>
             <div>
               <button @click="ajouterPanier(livre)" v-if="livre.quantity!=0&&isConnected" >Emprunter</button>
-              <button id="soldout" v-if="livre.quantity==0&&isConnected">Rupture</button>
+              <button id="soldout" v-if="livre.quantity==0&&isConnected">Rupture de stock</button>
               <button v-if="isAdmin" @click="deleteLivre(livre.idlivre)">Supprimer</button>
               <button v-if="isAdmin" @click="restockLivre(livre)" class="restock">Restocker</button>
               <input v-if="isAdmin" type="text" v-model="quantity.addedQuantity" placeholder="quantité">

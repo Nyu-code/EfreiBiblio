@@ -18,8 +18,10 @@
             <td><img src="images/JPG/cross_icon.png" class="image-suppr" alt="" v-on:click="deletePanier(livre.idpanier_item)"/></td>
         </tr>
     </table>
-    <button id="vider" v-on:click="deleteAll()">Vider</button>
-    <button id="valider">Valider</button>
+    <div class="boutons_panier">
+        <button id="vider" v-on:click="deleteAll()">Vider</button>
+        <button id="valider" v-on:click="deleteAll()">Valider</button>
+    </div>
   </div>
 </template>
 
@@ -97,7 +99,19 @@ tbody tr{
     margin-left: auto;
     margin-right: 10%;
 }
-
+#vider {
+    background-color:crimson;
+    display: flex;
+    margin-right: auto;
+    margin-left: 10%;
+    transition: all 0.3s ease 0s;
+}
+#vider:hover{
+    background-color:lightcoral;
+}
+.boutons_panier {
+    display: flex;
+}
 .livre_image {
     cursor: pointer;
     width: 40%;

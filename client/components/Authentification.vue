@@ -263,7 +263,7 @@ form.sign-up-form{
 }
 
 .right-panel .content, .right-panel .image{
-  transform: translateX(800px);
+  transform: translateX(1000px);
 }
 
 /* animation */
@@ -273,7 +273,7 @@ form.sign-up-form{
 }
 .container.sign-up-mode .left-panel .image,
 .container.sign-up-mode .left-panel .content{
-  transform: translateX(-800px);
+  transform: translateX(-1000px);
 }
 
 .container.sign-up-mode .right-panel .image,
