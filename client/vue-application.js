@@ -18,6 +18,7 @@ var app = new Vue({
   router,
   el: '#app',
   data: {
+    username : "",
     livres: [],
     panier: [],
     isAdmin: false,
@@ -72,6 +73,8 @@ var app = new Vue({
         const res3 = await axios.get('/api/checkAdmin')
         this.isAdmin = Boolean(res3.data[0].isAdmin)
         this.$router.push({ path: '/' })
+        const res4 = await axios.get('/api/getUser')
+        this.username = res4.data[0].username
       }else{
           alert("Utilisateur n'existe pas ou mauvais mot de passe")
       } 

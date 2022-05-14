@@ -9,6 +9,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://kit.fontawesome.com/aac953923c.js" crossorigin="anonymous"></script>
+        <script src="sweetalert2.all.min.js"></script>
         <link rel="shortcut icon" href="images/JPG/Livre.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +30,7 @@
           </header>
           <main>
               <router-view
+              :username="username"
               :panier="panier"
               :livres="livres"
               :is-connected="isConnected"
@@ -42,15 +44,12 @@
               @login-user="loginUser"
               ></router-view>
           </main>
-          <footer>
-            
-          </footer>
         </div>
         <script src="/vue-application.js"></script>
         <footer>
             <div class="copyrightText">Copyright © 2022 | EfreiBiblio Corporation. Tous droits réservés</div>
             <div class="divAboutUs">
-                <a class="linkAboutUs" href="apropos.html">À Propos de nous</a>
+                <a class="linkAboutUs">À Propos de nous</a>
             </div>
         </footer>
     </body>

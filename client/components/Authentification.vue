@@ -1,58 +1,63 @@
 <template>
-  <div class="container" :class="[isSignUpMode ? 'sign-up-mode' : '']">
-    <div class="forms-container">
-      <div class="signin-signup">
-        <form class="sign-in-form" @submit.prevent="loginUser">
-          <h2 class="title">Se connecter</h2>
-          <div class="input-field">
-            <i class="fas fa-user"></i>
-            <input type="text" v-model="user.email" placeholder="Enter Email" name="email" required>
-          </div>
-          <div class="input-field">
-            <i class="fas fa-lock"></i>
-            <input type="password" v-model="user.password" placeholder="Enter Password" name="psw" required>
-          </div>
-          <button type="submit" value="Login" class="btn solid">Connecter</button>
-        </form>
+<div>
+    <div class="container" :class="[isSignUpMode ? 'sign-up-mode' : '']" v-if="!isConnected">
+      <div class="forms-container">
+        <div class="signin-signup">
+          <form class="sign-in-form" @submit.prevent="loginUser">
+            <h2 class="title">Se connecter</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" v-model="user.email" placeholder="Enter Email" name="email" required>
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" v-model="user.password" placeholder="Enter Password" name="psw" required>
+            </div>
+            <button type="submit" value="Login" class="btn solid">Connecter</button>
+          </form>
 
-        <form @submit.prevent="addUser" class="sign-up-form">
-          <h2 class="title">S'inscrire</h2>
-          <div class="input-field">
-            <i class="fas fa-user"></i>
-            <input type="text" v-model="newUser.username" placeholder="Nom d'utilisateur" required>
+          <form @submit.prevent="addUser" class="sign-up-form">
+            <h2 class="title">S'inscrire</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" v-model="newUser.username" placeholder="Nom d'utilisateur" required>
+            </div>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input type="email" v-model="newUser.email" placeholder="Adresse mail" required>
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" v-model="newUser.password" placeholder="Mot de passe" required>
+            </div>
+              <button type="submit" value="Sign up" class="btn solid"> S'inscrire</button>
+          </form>
+        </div>
+      </div>
+      <div class="panels-container" v-if="!isConnected">
+        <div class="panel left-panel">
+          <div class="content">
+            <h3>Nouveaux utilisateur ?</h3>
+            <p>Venez découvrir plein de livres dans notre EfreiBiblio !</p>
+            <button class="btn transparent" id="sign-up-btn" @click="signUpMode()">S'inscrire</button>
           </div>
-          <div class="input-field">
-            <i class="fas fa-envelope"></i>
-            <input type="email" v-model="newUser.email" placeholder="Adresse mail" required>
+          <img src="images/SVG/register.svg" class="image" alt="">
+        </div>
+        <div class="panel right-panel">
+          <div class="content">
+            <h3>Déjà inscrit ?</h3>
+            <p>N'hésitez pas à donner votre avis sur les livres que vous empruntez !</p>
+            <button class="btn transparent" id="sign-in-btn" @click="signUpMode()">Se connecter</button>
           </div>
-          <div class="input-field">
-            <i class="fas fa-lock"></i>
-            <input type="password" v-model="newUser.password" placeholder="Mot de passe" required>
-          </div>
-            <button type="submit" value="Sign up" class="btn solid"> S'inscrire</button>
-        </form>
+          <img src="images/SVG/signin.svg" class="image" alt="">
+        </div>
       </div>
     </div>
-    <div class="panels-container">
-      
-      <div class="panel left-panel">
-        <div class="content">
-          <h3>Nouveaux utilisateur ?</h3>
-          <p>Venez découvrir plein de livres dans notre EfreiBiblio !</p>
-          <button class="btn transparent" id="sign-up-btn" @click="signUpMode()">S'inscrire</button>
-        </div>
-        <img src="images/SVG/register.svg" class="image" alt="">
-      </div>
-      <div class="panel right-panel">
-        <div class="content">
-          <h3>Déjà inscrit ?</h3>
-          <p>N'hésitez pas à donner votre avis sur les livres que vous empruntez !</p>
-          <button class="btn transparent" id="sign-in-btn" @click="signUpMode()">Se connecter</button>
-        </div>
-        <img src="images/SVG/signin.svg" class="image" alt="">
-      </div>
+    <div class="afterlogin-container" v-if="isConnected">
+      <div class="welcomemsg">Bienvenue <b>{{username}}</b> !</div>
+      <button>Se déconnecter</button>
     </div>
-  </div>
+</div>
 </template>
 <script>
 module.exports = {
@@ -69,6 +74,10 @@ module.exports = {
       },
       isSignUpMode : false,
     }
+  },
+  props: {
+    username : '',
+    isConnected: { type: Boolean, default: false }
   },
   methods: {
     loginUser () {

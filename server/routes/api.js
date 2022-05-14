@@ -286,9 +286,15 @@ router.post("/register", (req, res) => {
       bcrypt.hash(user.password, saltRounds, (err, hash) => {
         sequelize.query("INSERT INTO USER (username, email, password, isAdmin) VALUES ('" + user.username + "','" + user.email + "', '" + hash + "'," + false + ");");
     })
-  
+})
+router.get('/getUser', (req, res) => {
+  sequelize.query("SELECT username FROM user WHERE iduser = " + req.session.userId)
+  .then(([results, metadata]) => {
+    res.json(results)
+  })
+})
+;
 
-});
 
 
 module.exports = router
