@@ -18,10 +18,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.19.0",
-<<<<<<< HEAD
-=======
     "sweetalert": "^2.1.2",
->>>>>>> 14cee8197082dba61e1c2bdb6badda6d11952a7a
     "sweetalert2": "^11.4.14",
     "vue-sweetalert2": "^5.0.5"
   }
