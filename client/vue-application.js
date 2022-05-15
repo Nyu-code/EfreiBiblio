@@ -2,11 +2,13 @@ const Authentification = window.httpVueLoader('./components/Authentification.vue
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Catalogue = window.httpVueLoader('./components/Catalogue.vue')
 const AddLivre= window.httpVueLoader('./components/AjouterLivre.vue');
+const Accueil= window.httpVueLoader('./components/Accueil.vue');
 
 const routes = [
   { path: '/authentification', component: Authentification },
   { path: '/catalogue', component: Catalogue },
-  { path: '/panier', component: Panier }
+  { path: '/panier', component: Panier },
+  { path: '/accueil', component: Accueil}
 ]
 
 const router = new VueRouter({
@@ -84,8 +86,13 @@ var app = new Vue({
         alert("Connexion réussite")
       }else{
           alert("Utilisateur n'existe pas ou mauvais mot de passe")
-      } 
+      }
     },
-
+    async decoUser(user) {
+      const res = await axios.post('/api/login', user)
+      this.isConnected = false
+      this.$router.push({ path: '/' })
+      alert("Déconnexion réussite")
+    }
   }
 })

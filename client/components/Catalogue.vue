@@ -105,6 +105,7 @@ article {
 .article-img {
   display: flex;
   justify-content: center;
+  width: 25%;
 }
 .article-img img {
   margin-bottom: 1rem;
@@ -215,6 +216,9 @@ p{
   display: flex;
 }
 .debutcatalogue p{
-  margin-right: auto;
+  margin-left: 5%;
+  margin-right: 10%;
+  font-size: 30px;
+  color: rgb(25, 25, 180);
 }
 </style>

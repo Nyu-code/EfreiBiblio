@@ -24,8 +24,8 @@
                 <button id="valider" v-on:click="deleteAll()">Valider</button>
             </div>
         </div>
-        <div v-if="!isConnected">
-            <p> Il faut vous authentifier ! </p>
+        <div v-if="!isConnected" class="msg-deco">
+            <p class="msg-panier"><b> Il faut vous authentifier !</b> </p>
         </div>
     </div>
 </template>
@@ -50,12 +50,6 @@ module.exports ={
 </script>
 
 <style scoped>
-html,
-body {
-    margin: 0;
-    font-family: 'Shippori Antique', serif;
-    font-size: 16px;
-}
 
 table{
     margin: 2rem 2rem;
@@ -126,6 +120,14 @@ tbody tr{
 .image-suppr {
     cursor: pointer;
     width: 20%;
+}
+.msg-deco {
+    font-size: 30px;
+}
+
+.msg-panier {
+    display: flex;
+    justify-content: center;
 }
 
 </style>

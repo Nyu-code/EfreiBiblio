@@ -178,7 +178,7 @@ router.route('/panier')
       if(err){
         return res.sendStatus(403)
       }
-      const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'45s'})
+      const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'1800s'})
       res.json({token: token})
     })
   })
@@ -206,11 +206,10 @@ router.route('/panier')
               res.json(false)
               return;
             }else{
-              
               if (same){
                 req.session.panierId = results[0].idpanier
                 req.session.userId = results[0].iduser
-                const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'15s'})
+                const token = jwt.sign({user:user}, "sdgsdgksfdngsgksd", {expiresIn:'1800s'})
                 const refreshToken = jwt.sign(user, "jsdqngsdnjqsnsqdnvcjlznz63457435645")
                 refreshTokens.push(refreshToken)
                 res.json({token: token, refreshToken: refreshToken})

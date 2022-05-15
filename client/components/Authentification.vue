@@ -1,9 +1,13 @@
 <template>
 <div>
-    <div class="container" :class="[isSignUpMode ? 'sign-up-mode' : '']" v-if="!isConnected">
+    <div class="container" :class="[isSignUpMode ? 'sign-up-mode' : '']">
       <div class="forms-container">
         <div class="signin-signup">
-          <form class="sign-in-form" @submit.prevent="loginUser">
+
+          <h2 class="title" v-if="isConnected">Bienvenue {{username}} !</h2>
+          <button class="btn solid" v-if="isConnected" @click="decoUser(user)">Déconnexion</button>
+
+          <form class="sign-in-form" @submit.prevent="loginUser" v-if="!isConnected">
             <h2 class="title">Se connecter</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -16,7 +20,7 @@
             <button type="submit" value="Login" class="btn solid">Connecter</button>
           </form>
 
-          <form @submit.prevent="addUser" class="sign-up-form">
+          <form @submit.prevent="addUser" class="sign-up-form" v-if="!isConnected">
             <h2 class="title">S'inscrire</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -34,16 +38,17 @@
           </form>
         </div>
       </div>
-      <div class="panels-container" v-if="!isConnected">
+
+      <div class="panels-container">
         <div class="panel left-panel">
-          <div class="content">
+          <div class="content" v-if="!isConnected">
             <h3>Nouveaux utilisateur ?</h3>
             <p>Venez découvrir plein de livres dans notre EfreiBiblio !</p>
             <button class="btn transparent" id="sign-up-btn" @click="signUpMode()">S'inscrire</button>
           </div>
           <img src="images/SVG/register.svg" class="image" alt="">
         </div>
-        <div class="panel right-panel">
+        <div class="panel right-panel" v-if="!isConnected">
           <div class="content">
             <h3>Déjà inscrit ?</h3>
             <p>N'hésitez pas à donner votre avis sur les livres que vous empruntez !</p>
@@ -52,10 +57,6 @@
           <img src="images/SVG/signin.svg" class="image" alt="">
         </div>
       </div>
-    </div>
-    <div class="afterlogin-container" v-if="isConnected">
-      <div class="welcomemsg">Bienvenue <b>{{username}}</b> !</div>
-      <button>Se déconnecter</button>
     </div>
 </div>
 </template>
@@ -83,7 +84,10 @@ module.exports = {
     loginUser () {
       this.$emit('login-user', this.user)       
     },
-    addUser () {
+    decoUser(){
+      this.$emit('deco-user', this.user)
+    },
+    addUser() {
       this.$emit('add-user', this.newUser)
     },
     signUpMode(){
