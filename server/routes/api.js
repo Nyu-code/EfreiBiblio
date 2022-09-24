@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 //MDP A CHANGER
-const sequelize = new Sequelize("bd_web_efreibiblio", "root", "1069071822",{
+const sequelize = new Sequelize("bd_web_efreibiblio", "root", "",{
   dialect:'mysql',
   host:'localhost'
 })
